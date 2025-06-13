@@ -9,6 +9,12 @@ function flashcardApp() {
         showToast: false,
         toastMessage: '',
         
+        // Quiz mode properties
+        quizMode: false,
+        score: 0,
+        currentQuestion: {},
+        answerChecked: false,
+        
         // Initialize the app
         init() {
             // Load saved cards from localStorage
@@ -149,6 +155,78 @@ function flashcardApp() {
                 this.filteredCards = [...this.cards];
                 this.currentLevel = '';
             }
+        },
+        
+        // Quiz Mode Functions
+        startQuiz() {
+            if (this.filteredCards.length < 4) {
+                this.showNotification('Necesitas al menos 4 tarjetas en el nivel seleccionado para iniciar el test.');
+                return;
+            }
+            this.quizMode = true;
+            this.score = 0;
+            this.generateQuestion();
+        },
+
+        exitQuiz() {
+            this.quizMode = false;
+            this.currentQuestion = {};
+            this.answerChecked = false;
+        },
+
+        generateQuestion() {
+            this.answerChecked = false;
+            
+            // Get a random card for the correct answer
+            const correctCardIndex = Math.floor(Math.random() * this.filteredCards.length);
+            const correctCard = this.filteredCards[correctCardIndex];
+
+            // Get three other random cards for incorrect answers
+            const incorrectOptions = [];
+            while (incorrectOptions.length < 3) {
+                const randomIndex = Math.floor(Math.random() * this.filteredCards.length);
+                if (randomIndex !== correctCardIndex && !incorrectOptions.some(card => card.term === this.filteredCards[randomIndex].term)) {
+                    incorrectOptions.push(this.filteredCards[randomIndex]);
+                }
+            }
+
+            // Create options array
+            const options = [
+                { meaning: correctCard.meaning, isCorrect: true, isSelected: false },
+                ...incorrectOptions.map(card => ({ meaning: card.meaning, isCorrect: false, isSelected: false }))
+            ];
+            
+            // Shuffle options
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+
+            this.currentQuestion = {
+                term: correctCard.term,
+                options: options
+            };
+        },
+
+        checkAnswer(selectedOption) {
+            this.answerChecked = true;
+            selectedOption.isSelected = true;
+
+            if (selectedOption.isCorrect) {
+                this.score++;
+                this.showNotification('¡Correcto!');
+            } else {
+                this.showNotification('Incorrecto.');
+            }
+        },
+        
+        nextQuestion() {
+            if (this.filteredCards.length < 4) {
+                this.showNotification('No hay suficientes tarjetas para la siguiente pregunta.');
+                this.exitQuiz();
+                return;
+            }
+            this.generateQuestion();
         },
         
         // Get progress percentage

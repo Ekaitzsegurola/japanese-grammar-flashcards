@@ -58,7 +58,7 @@
         </div>
 
         <!-- Flashcard Section -->
-        <div class="flashcard-section" x-show="cards.length > 0" x-cloak>
+        <div class="flashcard-section" x-show="cards.length > 0 && !quizMode" x-cloak>
             <!-- Filter by Level -->
             <div class="level-filter">
                 <label>Filtrar por nivel:</label>
@@ -128,8 +128,44 @@
             <!-- Study Options -->
             <div class="study-options">
                 <button @click="resetProgress()" class="btn-reset">Reiniciar progreso</button>
+                <button @click="startQuiz()" class="btn-quiz">Modo Test</button>
                 <button @click="exportData()" class="btn-export">Exportar datos</button>
                 <button @click="importNewFile()" class="btn-import">Importar nuevo CSV</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-section" x-show="quizMode && cards.length > 0" x-cloak>
+            <div class="quiz-header">
+                <h2>Modo Test</h2>
+                <div class="quiz-stats">
+                    <span>Puntuación: <span x-text="score"></span></span>
+                    <button @click="exitQuiz()" class="btn-exit-quiz">Salir del Test</button>
+                </div>
+            </div>
+
+            <div class="quiz-card" x-show="currentQuestion.term">
+                <div class="quiz-question" x-text="currentQuestion.term"></div>
+            </div>
+
+            <div class="quiz-options" x-show="currentQuestion.term">
+                <template x-for="(option, index) in currentQuestion.options" :key="index">
+                    <button
+                        @click="checkAnswer(option)"
+                        class="btn-option"
+                        :class="{
+                            'correct': option.isCorrect && answerChecked,
+                            'incorrect': !option.isCorrect && option.isSelected,
+                            'disabled': answerChecked && !option.isSelected
+                        }"
+                        :disabled="answerChecked"
+                        x-text="option.meaning"
+                    ></button>
+                </template>
+            </div>
+
+            <div class="quiz-feedback" x-show="answerChecked">
+                <button @click="nextQuestion()" class="btn-next-question">Siguiente Pregunta</button>
             </div>
         </div>
     </div>
