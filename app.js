@@ -20,12 +20,40 @@ function flashcardApp() {
             // Load saved cards from localStorage
             this.loadFromStorage();
             
+            // If no cards are loaded, fetch the default CSV
+            if (this.cards.length === 0) {
+                this.loadDefaultCSV();
+            }
+            
             // Register service worker for offline functionality
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')
                     .then(reg => console.log('Service Worker registered'))
                     .catch(err => console.error('Service Worker registration failed:', err));
             }
+        },
+        
+        // Load default CSV file
+        loadDefaultCSV() {
+            fetch('csv/JLPT Grammar.csv')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        complete: (results) => {
+                            this.processCSVData(results.data);
+                            this.showNotification('Datos por defecto cargados.');
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching default CSV:', error);
+                    this.showNotification('No se pudo cargar el archivo CSV por defecto.');
+                });
         },
         
         // Handle CSV file upload

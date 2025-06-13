@@ -6,6 +6,7 @@ const urlsToCache = [
   '/styles.css',
   '/app.js',
   '/manifest.json',
+  '/csv/JLPT Grammar.csv',
   'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js'
 ];
