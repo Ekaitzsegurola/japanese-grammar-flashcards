@@ -215,45 +215,58 @@ function flashcardApp() {
         generateQuestion() {
             this.answerChecked = false;
             
-            // --- SRS Logic: Weighted selection for the correct answer ---
-            const candidates = this.filteredCards.filter(c => c.strength && c.meaning);
-            if (candidates.length < 4) {
+            // --- Step 1: Get a pool of valid candidates with unique meanings ---
+            const uniqueMeaningCards = [];
+            const meanings = new Set();
+            for (const card of this.filteredCards) {
+                if (card.meaning && !meanings.has(card.meaning)) {
+                    uniqueMeaningCards.push(card);
+                    meanings.add(card.meaning);
+                }
+            }
+
+            if (uniqueMeaningCards.length < 4) {
                 this.showNotification('No hay suficientes tarjetas con significados únicos para el test.');
                 this.exitQuiz();
                 return;
             }
 
-            // Calculate weights (lower strength = higher weight)
+            // --- Step 2: Weighted selection for the correct answer from the valid pool ---
+            const candidates = uniqueMeaningCards;
             const weights = candidates.map(card => {
-                const strength = Math.max(1, card.strength);
-                return 1 / (strength * strength); // Use squared inverse for stronger bias
+                const strength = Math.max(1, card.strength || 1);
+                return 1 / (strength * strength);
             });
 
             const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
             let randomWeight = Math.random() * totalWeight;
 
             let correctCard;
+            let correctCardIndexInCandidates = -1;
             for (let i = 0; i < candidates.length; i++) {
                 randomWeight -= weights[i];
                 if (randomWeight <= 0) {
                     correctCard = candidates[i];
+                    correctCardIndexInCandidates = i;
                     break;
                 }
             }
-            if (!correctCard) correctCard = candidates[candidates.length - 1]; // Fallback
-            
-            const correctCardIndex = this.filteredCards.findIndex(c => c.term === correctCard.term);
-
-            // Get three other random cards for incorrect answers
-            const incorrectOptions = [];
-            while (incorrectOptions.length < 3) {
-                const randomIndex = Math.floor(Math.random() * this.filteredCards.length);
-                if (randomIndex !== correctCardIndex && !incorrectOptions.some(card => card.term === this.filteredCards[randomIndex].term)) {
-                    incorrectOptions.push(this.filteredCards[randomIndex]);
-                }
+            if (!correctCard) { // Fallback
+                 correctCard = candidates[candidates.length - 1];
+                 correctCardIndexInCandidates = candidates.length - 1;
             }
+            
+            // --- Step 3: Get three other unique cards for incorrect answers ---
+            const incorrectOptionsPool = candidates.filter((_, index) => index !== correctCardIndexInCandidates);
 
-            // Create options array
+            // Shuffle the pool and pick 3
+            for (let i = incorrectOptionsPool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [incorrectOptionsPool[i], incorrectOptionsPool[j]] = [incorrectOptionsPool[j], incorrectOptionsPool[i]];
+            }
+            const incorrectOptions = incorrectOptionsPool.slice(0, 3);
+            
+            // --- Step 4: Create and shuffle options ---
             const options = [
                 { meaning: correctCard.meaning, isCorrect: true, isSelected: false },
                 ...incorrectOptions.map(card => ({ meaning: card.meaning, isCorrect: false, isSelected: false }))
