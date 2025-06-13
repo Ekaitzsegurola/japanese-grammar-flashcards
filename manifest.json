@@ -2,12 +2,12 @@
   "name": "Flashcards Gramática Japonesa JLPT",
   "short_name": "JLPT Cards",
   "description": "Aplicación de flashcards para estudiar gramática japonesa del JLPT",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
   "orientation": "any",
-  "scope": "/",
+  "scope": ".",
   "lang": "es",
   "icons": [
     {

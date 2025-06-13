@@ -1,18 +1,26 @@
 // Service Worker for offline functionality
-const CACHE_NAME = 'jlpt-flashcards-v2';
-const SW_VERSION = '1.1.0';
+const CACHE_NAME = 'jlpt-flashcards-v3';
+const SW_VERSION = '1.2.0';
 
 console.log(`SW Version ${SW_VERSION} loading...`);
 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
-  '/csv/JLPT Grammar.csv',
+  './',
+  './index.html',
+  './styles.css',
+  './app.js',
+  './manifest.json',
+  './csv/JLPT Grammar.csv',
   'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js',
+  './icons/icon-72.png',
+  './icons/icon-96.png',
+  './icons/icon-128.png',
+  './icons/icon-144.png',
+  './icons/icon-152.png',
+  './icons/icon-192.png',
+  './icons/icon-384.png',
+  './icons/icon-512.png'
 ];
 
 // Install Service Worker
