@@ -74,10 +74,14 @@ function flashcardApp() {
         // Process CSV data and normalize fields
         processCSVData(data) {
             const processedCards = [];
+            const existingCardsIndex = this.cards.reduce((acc, card) => {
+                if (card.term) acc[card.term] = card;
+                return acc;
+            }, {});
             
             data.forEach((row, index) => {
                 // Skip empty rows
-                if (!row || row.length < 3) return;
+                if (!row || (Array.isArray(row) && row.length < 3)) return;
                 
                 // Handle different CSV formats
                 let card = {};
@@ -108,6 +112,12 @@ function flashcardApp() {
                 
                 // Only add cards with at least a term
                 if (card.term) {
+                    const existingCard = existingCardsIndex[card.term];
+                    if (existingCard && existingCard.strength) {
+                        card.strength = existingCard.strength;
+                    } else {
+                        card.strength = 1; // Default strength for new cards
+                    }
                     processedCards.push(card);
                 }
             });
@@ -205,9 +215,34 @@ function flashcardApp() {
         generateQuestion() {
             this.answerChecked = false;
             
-            // Get a random card for the correct answer
-            const correctCardIndex = Math.floor(Math.random() * this.filteredCards.length);
-            const correctCard = this.filteredCards[correctCardIndex];
+            // --- SRS Logic: Weighted selection for the correct answer ---
+            const candidates = this.filteredCards.filter(c => c.strength && c.meaning);
+            if (candidates.length < 4) {
+                this.showNotification('No hay suficientes tarjetas con significados únicos para el test.');
+                this.exitQuiz();
+                return;
+            }
+
+            // Calculate weights (lower strength = higher weight)
+            const weights = candidates.map(card => {
+                const strength = Math.max(1, card.strength);
+                return 1 / (strength * strength); // Use squared inverse for stronger bias
+            });
+
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            let randomWeight = Math.random() * totalWeight;
+
+            let correctCard;
+            for (let i = 0; i < candidates.length; i++) {
+                randomWeight -= weights[i];
+                if (randomWeight <= 0) {
+                    correctCard = candidates[i];
+                    break;
+                }
+            }
+            if (!correctCard) correctCard = candidates[candidates.length - 1]; // Fallback
+            
+            const correctCardIndex = this.filteredCards.findIndex(c => c.term === correctCard.term);
 
             // Get three other random cards for incorrect answers
             const incorrectOptions = [];
@@ -240,12 +275,20 @@ function flashcardApp() {
             this.answerChecked = true;
             selectedOption.isSelected = true;
 
+            const cardToUpdate = this.cards.find(c => c.term === this.currentQuestion.term);
+            if (!cardToUpdate) return; // Should not happen, but good practice
+
             if (selectedOption.isCorrect) {
                 this.score++;
+                cardToUpdate.strength = (cardToUpdate.strength || 1) + 1;
                 this.showNotification('¡Correcto!');
             } else {
+                cardToUpdate.strength = 1; // Reset strength on failure
                 this.showNotification('Incorrecto.');
             }
+            
+            // Save progress immediately
+            this.saveToStorage();
         },
         
         nextQuestion() {
