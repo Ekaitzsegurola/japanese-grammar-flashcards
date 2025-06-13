@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio Rápido - Flashcards JLPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #5a5cc7;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #48bb78;
+        }
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .warning {
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .success {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎌 Flashcards Gramática Japonesa JLPT</h1>
+        
+        <div class="success">
+            <strong>¡Proyecto creado exitosamente!</strong> Tu aplicación de flashcards está lista para usar.
+        </div>
+
+        <div class="section">
+            <h2>🚀 Inicio Rápido</h2>
+            <div class="button-group">
+                <button class="btn" onclick="startLocalServer()">Iniciar Servidor Local</button>
+                <a href="icon-generator.html" class="btn btn-secondary">Generar Iconos PNG</a>
+            </div>
+            
+            <div class="warning">
+                <strong>Nota:</strong> Para que la PWA funcione correctamente (service worker, instalación), necesitas ejecutarla desde un servidor HTTP, no directamente desde el archivo.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Pasos para Publicar</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Generar iconos PNG:</strong> Abre <code>icon-generator.html</code> y guarda los iconos
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Crear repositorio en GitHub:</strong>
+                <pre style="margin-top: 10px; background: #f5f5f5; padding: 10px; border-radius: 5px;">
+git remote add origin https://github.com/TU_USUARIO/japanese-grammar-flashcards.git
+git branch -M main
+git push -u origin main</pre>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Activar GitHub Pages:</strong> Settings → Pages → Source: main branch
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Generar APK:</strong> Ve a <a href="https://pwa2apk.com" target="_blank">PWA2APK.com</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Probar Localmente</h2>
+            <p>Elige una opción:</p>
+            
+            <h3>Opción 1: Python (recomendado si tienes Python)</h3>
+            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+cd C:\Users\SOCKAND\Documents\GODOT\japanese-grammar-flashcards
+python -m http.server 8000</pre>
+            <p>Luego abre: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+            
+            <h3>Opción 2: VS Code Live Server</h3>
+            <p>Instala la extensión "Live Server" y haz clic derecho en <code>index.html</code> → "Open with Live Server"</p>
+            
+            <h3>Opción 3: Node.js</h3>
+            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+npx http-server -p 8080</pre>
+        </div>
+
+        <div class="section">
+            <h2>📁 Estructura del Proyecto</h2>
+            <ul>
+                <li><code>index.html</code> - Página principal de la aplicación</li>
+                <li><code>app.js</code> - Lógica de flashcards</li>
+                <li><code>styles.css</code> - Estilos visuales</li>
+                <li><code>manifest.json</code> - Configuración PWA</li>
+                <li><code>sw.js</code> - Service Worker para offline</li>
+                <li><code>sample-data.csv</code> - Datos de ejemplo para probar</li>
+                <li><code>icon-generator.html</code> - Generador de iconos</li>
+                <li><code>README.md</code> - Documentación completa</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>✨ Características Incluidas</h2>
+            <ul>
+                <li>✅ Importación de múltiples formatos CSV</li>
+                <li>✅ Flashcards con animación de volteo</li>
+                <li>✅ Filtrado por niveles JLPT (N5-N1)</li>
+                <li>✅ Funcionalidad 100% offline</li>
+                <li>✅ Guardado automático de progreso</li>
+                <li>✅ Mezcla aleatoria de tarjetas</li>
+                <li>✅ Exportación de datos</li>
+                <li>✅ Diseño responsive para tablets</li>
+                <li>✅ Instalable como app nativa</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function startLocalServer() {
+            alert('Para iniciar un servidor local:\n\n' +
+                  '1. Abre una terminal (CMD o PowerShell)\n' +
+                  '2. Navega a: C:\\Users\\SOCKAND\\Documents\\GODOT\\japanese-grammar-flashcards\n' +
+                  '3. Ejecuta: python -m http.server 8000\n' +
+                  '4. Abre: http://localhost:8000\n\n' +
+                  'Alternativamente, usa VS Code con Live Server.');
+        }
+    </script>
+</body>
+</html>
