@@ -1,7 +1,7 @@
 // Flashcard App using Alpine.js
 function flashcardApp() {
     return {
-        version: '1.1.0',
+        version: '1.1.2',
         cards: [],
         filteredCards: [],
         currentIndex: 0,
@@ -359,9 +359,13 @@ function flashcardApp() {
         // Save to localStorage
         saveToStorage() {
             try {
-                localStorage.setItem('jlpt-flashcards', JSON.stringify(this.cards));
-                localStorage.setItem('jlpt-current-index', this.currentIndex.toString());
-                localStorage.setItem('jlpt-current-level', this.currentLevel);
+                const dataToSave = {
+                    version: this.version,
+                    cards: this.cards,
+                    currentIndex: this.currentIndex,
+                    currentLevel: this.currentLevel
+                };
+                localStorage.setItem('jlpt-flashcards-data', JSON.stringify(dataToSave));
             } catch (e) {
                 console.error('Error saving to localStorage:', e);
             }
@@ -370,24 +374,38 @@ function flashcardApp() {
         // Load from localStorage
         loadFromStorage() {
             try {
-                const savedCards = localStorage.getItem('jlpt-flashcards');
-                if (savedCards) {
-                    this.cards = JSON.parse(savedCards);
-                    this.filteredCards = [...this.cards];
+                const savedDataJSON = localStorage.getItem('jlpt-flashcards-data');
+                if (savedDataJSON) {
+                    const savedData = JSON.parse(savedDataJSON);
                     
-                    const savedIndex = localStorage.getItem('jlpt-current-index');
-                    if (savedIndex) {
-                        this.currentIndex = parseInt(savedIndex) || 0;
-                    }
-                    
-                    const savedLevel = localStorage.getItem('jlpt-current-level');
-                    if (savedLevel) {
-                        this.filterByLevel(savedLevel);
+                    // If versions match, load the data
+                    if (savedData.version === this.version && savedData.cards) {
+                        this.cards = savedData.cards;
+                        this.filteredCards = [...this.cards];
+                        
+                        const savedIndex = savedData.currentIndex;
+                        if (savedIndex) {
+                            this.currentIndex = parseInt(savedIndex) || 0;
+                        }
+                        
+                        const savedLevel = savedData.currentLevel;
+                        if (savedLevel) {
+                            this.filterByLevel(savedLevel);
+                        }
+                        return; // Exit if load is successful
                     }
                 }
             } catch (e) {
                 console.error('Error loading from localStorage:', e);
+                // If parsing fails, we'll proceed to clear storage below.
             }
+
+            // If we reach here, it's because of no data, a version mismatch, or a loading error.
+            // We clear ALL possible storage keys to ensure a clean state.
+            localStorage.removeItem('jlpt-flashcards');
+            localStorage.removeItem('jlpt-current-index');
+            localStorage.removeItem('jlpt-current-level');
+            localStorage.removeItem('jlpt-flashcards-data');
         },
         
         // Export data as CSV
@@ -421,7 +439,7 @@ function flashcardApp() {
                 this.currentIndex = 0;
                 this.showAnswer = false;
                 this.currentLevel = '';
-                localStorage.removeItem('jlpt-flashcards');
+                localStorage.removeItem('jlpt-flashcards-data');
             }
         },
         
