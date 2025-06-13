@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2196F3">
+    <title>Flashcards Gramática Japonesa</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="JLPT Flashcards">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Alpine.js for reactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Papa Parse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body x-data="flashcardApp()">
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Gramática Japonesa JLPT</h1>
+            <div class="stats" x-show="cards.length > 0">
+                <span>Tarjeta <span x-text="currentIndex + 1"></span> de <span x-text="cards.length"></span></span>
+                <span x-show="currentLevel">Nivel: <span x-text="currentLevel"></span></span>
+            </div>
+        </header>
+
+        <!-- Import Section -->
+        <div class="import-section" x-show="cards.length === 0">
+            <div class="import-box">
+                <h2>Importar CSV de Gramática</h2>
+                <p>Selecciona tu archivo CSV con las entradas de gramática japonesa</p>
+                <input type="file" id="csvFile" accept=".csv" @change="handleFileUpload($event)">
+                <label for="csvFile" class="file-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Seleccionar archivo CSV
+                </label>
+                <div class="sample-format">
+                    <h3>Formato esperado:</h3>
+                    <code>N5,1,だ,da,to be (am, is, are),,,,,,</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flashcard Section -->
+        <div class="flashcard-section" x-show="cards.length > 0" x-cloak>
+            <!-- Filter by Level -->
+            <div class="level-filter">
+                <label>Filtrar por nivel:</label>
+                <select @change="filterByLevel($event.target.value)">
+                    <option value="">Todos los niveles</option>
+                    <option value="N5">N5</option>
+                    <option value="N4">N4</option>
+                    <option value="N3">N3</option>
+                    <option value="N2">N2</option>
+                    <option value="N1">N1</option>
+                </select>
+            </div>
+
+            <!-- Flashcard -->
+            <div class="flashcard" @click="toggleCard()">
+                <div class="card-content" :class="{ 'flipped': showAnswer }">
+                    <!-- Front of card -->
+                    <div class="card-front" x-show="!showAnswer">
+                        <div class="japanese-term" x-text="getCurrentCard()?.term || getCurrentCard()?.japanese || ''"></div>
+                        <div class="romanization" x-text="getCurrentCard()?.romanization || getCurrentCard()?.romaji || ''"></div>
+                        <div class="hint">Toca para ver la respuesta</div>
+                    </div>
+                    
+                    <!-- Back of card -->
+                    <div class="card-back" x-show="showAnswer">
+                        <div class="meaning" x-text="getCurrentCard()?.meaning || getCurrentCard()?.english || ''"></div>
+                        <div class="url" x-show="getCurrentCard()?.url">
+                            <a :href="getCurrentCard()?.url" target="_blank" @click.stop>Ver más información</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="controls">
+                <button @click="previousCard()" class="btn-nav">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Anterior
+                </button>
+                
+                <button @click="shuffleCards()" class="btn-shuffle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 3 21 3 21 8"></polyline>
+                        <line x1="4" y1="20" x2="21" y2="3"></line>
+                        <polyline points="21 16 21 21 16 21"></polyline>
+                        <line x1="15" y1="15" x2="21" y2="21"></line>
+                        <line x1="4" y1="4" x2="9" y2="9"></line>
+                    </svg>
+                    Mezclar
+                </button>
+                
+                <button @click="nextCard()" class="btn-nav">
+                    Siguiente
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: getProgress() + '%' }"></div>
+            </div>
+
+            <!-- Study Options -->
+            <div class="study-options">
+                <button @click="resetProgress()" class="btn-reset">Reiniciar progreso</button>
+                <button @click="exportData()" class="btn-export">Exportar datos</button>
+                <button @click="importNewFile()" class="btn-import">Importar nuevo CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div class="toast" x-show="showToast" x-text="toastMessage" x-transition></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
