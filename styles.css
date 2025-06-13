@@ -385,6 +385,19 @@ input[type="file"] {
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     margin-bottom: 30px;
+    position: relative;
+}
+
+.quiz-level-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #5a67d8;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .quiz-question {

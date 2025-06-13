@@ -280,7 +280,8 @@ function flashcardApp() {
 
             this.currentQuestion = {
                 term: correctCard.term,
-                options: options
+                options: options,
+                level: correctCard.level
             };
         },
 
