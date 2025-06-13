@@ -1,5 +1,9 @@
 // Service Worker for offline functionality
-const CACHE_NAME = 'jlpt-flashcards-v1';
+const CACHE_NAME = 'jlpt-flashcards-v2';
+const SW_VERSION = '1.1.0';
+
+console.log(`SW Version ${SW_VERSION} loading...`);
+
 const urlsToCache = [
   '/',
   '/index.html',
@@ -13,6 +17,7 @@ const urlsToCache = [
 
 // Install Service Worker
 self.addEventListener('install', event => {
+  console.log(`SW Version ${SW_VERSION} installed.`);
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -60,6 +65,7 @@ self.addEventListener('fetch', event => {
 
 // Activate Service Worker
 self.addEventListener('activate', event => {
+  console.log(`SW Version ${SW_VERSION} activated.`);
   const cacheWhitelist = [CACHE_NAME];
   
   event.waitUntil(

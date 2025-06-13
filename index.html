@@ -177,6 +177,16 @@
     <!-- Toast notifications -->
     <div class="toast" x-show="showToast" x-text="toastMessage" x-transition></div>
 
+    <!-- Update Toast -->
+    <div class="toast update-toast" x-show="showUpdateToast" x-cloak>
+        <span>Hay una nueva versión disponible.</span>
+        <button @click="refreshPage()">Actualizar</button>
+    </div>
+
+    <footer>
+        <p>Versión <span x-text="version"></span></p>
+    </footer>
+
     <script src="app.js"></script>
 </body>
 </html>

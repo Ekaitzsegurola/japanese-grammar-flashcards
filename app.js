@@ -1,6 +1,7 @@
 // Flashcard App using Alpine.js
 function flashcardApp() {
     return {
+        version: '1.1.0',
         cards: [],
         filteredCards: [],
         currentIndex: 0,
@@ -8,6 +9,8 @@ function flashcardApp() {
         currentLevel: '',
         showToast: false,
         toastMessage: '',
+        showUpdateToast: false,
+        newWorker: null,
         
         // Quiz mode properties
         quizMode: false,
@@ -28,8 +31,29 @@ function flashcardApp() {
             // Register service worker for offline functionality
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered'))
+                    .then(reg => {
+                        console.log('Service Worker registered');
+                        reg.addEventListener('updatefound', () => {
+                            this.newWorker = reg.installing;
+                            this.newWorker.addEventListener('statechange', () => {
+                                if (this.newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    this.showUpdateToast = true;
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.error('Service Worker registration failed:', err));
+            }
+        },
+        
+        // Method to refresh the page with the new worker
+        refreshPage() {
+            this.showUpdateToast = false;
+            if (this.newWorker) {
+                this.newWorker.postMessage({ action: 'skipWaiting' });
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    window.location.reload();
+                });
             }
         },
         

@@ -604,3 +604,31 @@ input[type="file"] {
         font-size: 4.5rem;
     }
 }
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: white;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.update-toast {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.update-toast button {
+    background: #48bb78;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.update-toast button:hover {
+    background: #38a169;
+}
