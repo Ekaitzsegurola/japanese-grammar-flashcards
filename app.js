@@ -44,6 +44,8 @@ function flashcardApp() {
                 })
                 .then(csvText => {
                     Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
                         complete: (results) => {
                             this.processCSVData(results.data);
                             this.showNotification('Datos por defecto cargados.');
@@ -62,6 +64,8 @@ function flashcardApp() {
             if (!file) return;
             
             Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
                 complete: (results) => {
                     this.processCSVData(results.data);
                 },
