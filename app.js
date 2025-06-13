@@ -107,10 +107,10 @@ function flashcardApp() {
                     card = {
                         level: row.level || row.Level || row.LEVEL || '',
                         number: row.number || row.Number || row.id || '',
-                        term: row.term || row.japanese || row.Japanese || '',
-                        romanization: row.romanization || row.romaji || row.Romaji || '',
-                        meaning: row.meaning || row.english || row.English || row.translation || '',
-                        usage: row.usage || row.Usage || row.use || ''
+                        term: row.term || row.Term || row.japanese || row.Japanese || '',
+                        romanization: row.romanization || row.Romanization || row.romaji || row.Romaji || '',
+                        meaning: row.meaning || row.Meaning || row.english || row.English || row.translation || '',
+                        usage: row.usage || row.Usage || row.use || row['How to use'] || ''
                     };
                 }
                 
