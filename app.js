@@ -94,19 +94,19 @@ function flashcardApp() {
                         term: row[2] || '',
                         romanization: row[3] || '',
                         meaning: row[4] || '',
-                        url: row[5] || ''
+                        usage: row[5] || ''
                     };
                 }
                 // Format 2: Object with headers
                 else if (typeof row === 'object') {
                     // Try to map common field names
                     card = {
-                        level: row.level || row.Level || row.LEVEL || row[0] || '',
-                        number: row.number || row.Number || row.id || row[1] || index,
-                        term: row.term || row.japanese || row.Japanese || row[2] || '',
-                        romanization: row.romanization || row.romaji || row.Romaji || row[3] || '',
-                        meaning: row.meaning || row.english || row.English || row.translation || row[4] || '',
-                        url: row.url || row.URL || row.link || row[5] || ''
+                        level: row.level || row.Level || row.LEVEL || '',
+                        number: row.number || row.Number || row.id || '',
+                        term: row.term || row.japanese || row.Japanese || '',
+                        romanization: row.romanization || row.romaji || row.Romaji || '',
+                        meaning: row.meaning || row.english || row.English || row.translation || '',
+                        usage: row.usage || row.Usage || row.use || ''
                     };
                 }
                 
@@ -281,7 +281,8 @@ function flashcardApp() {
             this.currentQuestion = {
                 term: correctCard.term,
                 options: options,
-                level: correctCard.level
+                level: correctCard.level,
+                usage: correctCard.usage
             };
         },
 
