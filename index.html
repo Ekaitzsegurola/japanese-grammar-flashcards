@@ -149,7 +149,7 @@
             </div>
 
             <div class="quiz-options" x-show="currentQuestion.term">
-                <template x-for="(option, index) in currentQuestion.options" :key="index">
+                <template x-for="(option, index) in currentQuestion.options" :key="option.meaning">
                     <button
                         @click="checkAnswer(option)"
                         class="btn-option"
