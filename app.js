@@ -134,7 +134,7 @@ function flashcardApp() {
                         term: row.term || row.Term || row.japanese || row.Japanese || row.grammar || row.Grammar || '',
                         romanization: row.romanization || row.Romanization || row.romaji || row.Romaji || '',
                         meaning: row.meaning || row.Meaning || row.english || row.English || row.translation || '',
-                        usage: row.usage || row.Usage || row.use || row['How to use'] || ''
+                        usage: row.usage || row.Usage || row.use || row['how to use'] || ''
                     };
                 }
                 
