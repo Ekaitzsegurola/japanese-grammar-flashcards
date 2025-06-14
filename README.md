@@ -5,6 +5,7 @@ Una aplicación Progressive Web App (PWA) para estudiar gramática japonesa del 
 ## Características
 
 - ✅ Importación de archivos CSV con entradas de gramática
+- ✅ Estudio de Kanjis por niveles JLPT ¡Nuevo!
 - ✅ Flashcards interactivas con toque para voltear
 - ✅ Filtrado por niveles JLPT (N5-N1)
 - ✅ Funcionalidad offline completa
@@ -145,7 +146,11 @@ Puedes usar:
 
 ```
 japanese-grammar-flashcards/
-├── index.html          # Página principal
+├── index.html          # Página principal de Gramática
+├── kanji-study/        # Nueva sección de estudio de Kanjis
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
 ├── styles.css          # Estilos
 ├── app.js             # Lógica de la aplicación
 ├── manifest.json      # Configuración PWA
@@ -157,11 +162,12 @@ japanese-grammar-flashcards/
 
 ## Próximos pasos
 
-1. **Generar iconos PNG** desde el SVG
-2. **Crear repositorio en GitHub**
-3. **Activar GitHub Pages**
-4. **Generar APK con PWA2APK**
-5. **Instalar en tablet**
+1. **Explorar la nueva sección de Kanjis**
+2. **Generar iconos PNG** desde el SVG
+3. **Crear repositorio en GitHub**
+4. **Activar GitHub Pages**
+5. **Generar APK con PWA2APK**
+6. **Instalar en tablet**
 
 ## Licencia
 

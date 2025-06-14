@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio de Kanjis: Lecturas SHU, JU, SHO y JO</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="header__title">📚 Estudio de Kanjis</h1>
+            <p class="header__subtitle">Lecturas SHU, JU, SHO y JO</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <div class="nav__tabs" id="nav-tabs">
+                <button class="nav__tab active" data-list="SHU (しゅ)">
+                    <span class="nav__tab-label">SHU</span>
+                    <span class="nav__tab-reading">しゅ</span>
+                    <span class="nav__tab-count">17</span>
+                </button>
+                <button class="nav__tab" data-list="SHUU (しゅう)">
+                    <span class="nav__tab-label">SHUU</span>
+                    <span class="nav__tab-reading">しゅう</span>
+                    <span class="nav__tab-count">21</span>
+                </button>
+                <button class="nav__tab" data-list="JU (じゅ)">
+                    <span class="nav__tab-label">JU</span>
+                    <span class="nav__tab-reading">じゅ</span>
+                    <span class="nav__tab-count">14</span>
+                </button>
+                <button class="nav__tab" data-list="JUU (じゅう)">
+                    <span class="nav__tab-label">JUU</span>
+                    <span class="nav__tab-reading">じゅう</span>
+                    <span class="nav__tab-count">16</span>
+                </button>
+                <button class="nav__tab" data-list="SHO (しょ)">
+                    <span class="nav__tab-label">SHO</span>
+                    <span class="nav__tab-reading">しょ</span>
+                    <span class="nav__tab-count">19</span>
+                </button>
+                <button class="nav__tab" data-list="SHOU (しょう)">
+                    <span class="nav__tab-label">SHOU</span>
+                    <span class="nav__tab-reading">しょう</span>
+                    <span class="nav__tab-count">17</span>
+                </button>
+                <button class="nav__tab" data-list="JO (じょ)">
+                    <span class="nav__tab-label">JO</span>
+                    <span class="nav__tab-reading">じょ</span>
+                    <span class="nav__tab-count">16</span>
+                </button>
+                <button class="nav__tab" data-list="JOU (じょう)">
+                    <span class="nav__tab-label">JOU</span>
+                    <span class="nav__tab-reading">じょう</span>
+                    <span class="nav__tab-count">23</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <div class="controls">
+                <div class="controls__left">
+                    <div class="search-box">
+                        <input type="text" id="search-input" class="form-control" placeholder="Buscar por kanji, lectura o significado...">
+                    </div>
+                    <div class="filter-box">
+                        <select id="reading-filter" class="form-control">
+                            <option value="all">Todas las lecturas</option>
+                            <option value="onyomi">Solo On'yomi</option>
+                            <option value="kunyomi">Solo Kun'yomi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="controls__right">
+                    <button id="view-toggle" class="btn btn--secondary">
+                        <span id="view-toggle-text">Vista de Tabla</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="list-header">
+                    <h2 id="current-list-title">SHU (しゅ)</h2>
+                    <p id="current-list-description">Vocal corta</p>
+                    <div class="list-stats">
+                        <span id="showing-count">Mostrando 17 de 17 kanjis</span>
+                    </div>
+                </div>
+
+                <div id="kanji-container" class="kanji-grid">
+                    <!-- Kanjis will be loaded here dynamically -->
+                </div>
+
+                <div id="no-results" class="no-results hidden">
+                    <p>No se encontraron kanjis que coincidan con tu búsqueda.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__stats">
+                <div class="stat">
+                    <span class="stat__value">8</span>
+                    <span class="stat__label">Listas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat__value">143</span>
+                    <span class="stat__label">Kanjis Total</span>
+                </div>
+                <div class="stat">
+                    <span class="stat__value" id="current-count">17</span>
+                    <span class="stat__label">Lista Actual</span>
+                </div>
+            </div>
+            <p class="footer__text">
+                Aplicación de estudio para lecturas de kanjis organizadas sistemáticamente
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
